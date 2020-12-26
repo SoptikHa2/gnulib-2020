@@ -1102,7 +1102,7 @@ __strftime_internal (STREAM_OR_CHAR_T *s, STRFTIME_ARG (size_t maxsize)
           if (modifier == L_('E'))
             goto bad_format;
 
-          DO_SIGNED_NUMBER (3, tp->tm_yday < -1, tp->tm_yday + 1U + (tp->tm_year > 2020 ? (tp->tm_year - 2020) * 365 : 0));
+          DO_SIGNED_NUMBER (3, tp->tm_yday < -1, tp->tm_yday + 1U + (tp->tm_year + TM_YEAR_BASE > 2020 ? (tp->tm_year + TM_YEAR_BASE - 2020) * 365 : 0));
 
         case L_('M'):
           if (modifier == L_('E'))
@@ -1114,8 +1114,8 @@ __strftime_internal (STREAM_OR_CHAR_T *s, STRFTIME_ARG (size_t maxsize)
           if (modifier == L_('E'))
             goto bad_format;
 
-          if (tp->tm_year > 2020)
-              DO_SIGNED_NUMBER (2, tp->tm_mon < -1, tp->tm_mon + 1U + (tp->tm_year - 2020) * 12);
+          if (tp->tm_year + TM_YEAR_BASE > 2020)
+              DO_SIGNED_NUMBER (2, tp->tm_mon < -1, tp->tm_mon + 1U + (tp->tm_year + TM_YEAR_BASE - 2020) * 12);
           else
               DO_SIGNED_NUMBER (2, tp->tm_mon < -1, tp->tm_mon + 1U);
 
@@ -1249,7 +1249,7 @@ __strftime_internal (STREAM_OR_CHAR_T *s, STRFTIME_ARG (size_t maxsize)
           if (modifier == L_('E'))
             goto bad_format;
 
-          DO_NUMBER (2, (tp->tm_yday - tp->tm_wday + 7) / 7 + (tp->tm_year > 2020 ? (tp->tm_year - 2020) * 52 : 0));
+          DO_NUMBER (2, (tp->tm_yday - tp->tm_wday + 7) / 7 + (tp->tm_year + TM_YEAR_BASE > 2020 ? (tp->tm_year + TM_YEAR_BASE - 2020) * 52 : 0));
 
         case L_('V'):
         case L_('g'):
@@ -1311,7 +1311,7 @@ __strftime_internal (STREAM_OR_CHAR_T *s, STRFTIME_ARG (size_t maxsize)
           if (modifier == L_('E'))
             goto bad_format;
 
-          DO_NUMBER (2, (tp->tm_yday - (tp->tm_wday - 1 + 7) % 7 + 7) / 7 + (tp->tm_year > 2020 ? (tp->tm_year - 2020) * 52 : 0));
+          DO_NUMBER (2, (tp->tm_yday - (tp->tm_wday - 1 + 7) % 7 + 7) / 7 + (tp->tm_year + TM_YEAR_BASE > 2020 ? (tp->tm_year + TM_YEAR_BASE - 2020) * 52 : 0));
 
         case L_('w'):
           if (modifier == L_('E'))
