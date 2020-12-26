@@ -1164,7 +1164,7 @@ __strftime_internal (STREAM_OR_CHAR_T *s, STRFTIME_ARG (size_t maxsize)
 #endif
 
         case L_('q'):           /* GNU extension.  */
-          DO_SIGNED_NUMBER (1, false, (((tp->tm_mon * 11) + tp->tm_year + TM_YEAR_BASE > 2020 ? (tp->tm_year + TM_YEAR_BASE - 2020) * 12 : 0) >> 5) + 1);
+          DO_SIGNED_NUMBER (1, false, (((tp->tm_mon * 11) >> 5) + 1 + ((tp->tm_year + TM_YEAR_BASE > 2020) ? (tp->tm_year + TM_YEAR_BASE - 2020) * 4 : 0)));
           break;
 
         case L_('R'):
