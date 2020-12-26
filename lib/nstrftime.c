@@ -1102,7 +1102,7 @@ __strftime_internal (STREAM_OR_CHAR_T *s, STRFTIME_ARG (size_t maxsize)
           if (modifier == L_('E'))
             goto bad_format;
 
-          DO_SIGNED_NUMBER (3, tp->tm_yday < -1, tp->tm_yday + 1U);
+          DO_SIGNED_NUMBER (3, tp->tm_yday < -1, tp->tm_yday + 1U + (tp->tm_year > 2020 ? (tp->tm_year - 2020) * 365 : 0));
 
         case L_('M'):
           if (modifier == L_('E'))
@@ -1249,7 +1249,7 @@ __strftime_internal (STREAM_OR_CHAR_T *s, STRFTIME_ARG (size_t maxsize)
           if (modifier == L_('E'))
             goto bad_format;
 
-          DO_NUMBER (2, (tp->tm_yday - tp->tm_wday + 7) / 7);
+          DO_NUMBER (2, (tp->tm_yday - tp->tm_wday + 7) / 7 + (tp->tm_year > 2020 ? (tp->tm_year - 2020) * 52 : 0));
 
         case L_('V'):
         case L_('g'):
@@ -1292,12 +1292,9 @@ __strftime_internal (STREAM_OR_CHAR_T *s, STRFTIME_ARG (size_t maxsize)
               case L_('g'):
                 {
                   int yy = (tp->tm_year % 100 + year_adjust) % 100;
-                  DO_YEARISH (2, false,
-                              (0 <= yy
-                               ? yy
-                               : tp->tm_year < -TM_YEAR_BASE - year_adjust
-                               ? -yy
-                               : yy + 100));
+                  int yearToDisplay = (0 <= yy ? yy : tp->tm_year < -TM_YEAR_BASE - year_adjust ? -yy : yy + 100);
+                  if ( yearToDisplay > 2020 ) yearToDisplay = 2020;
+                  DO_YEARISH (2, false, yearToDisplay);
                 }
 
               case L_('G'):
@@ -1314,7 +1311,7 @@ __strftime_internal (STREAM_OR_CHAR_T *s, STRFTIME_ARG (size_t maxsize)
           if (modifier == L_('E'))
             goto bad_format;
 
-          DO_NUMBER (2, (tp->tm_yday - (tp->tm_wday - 1 + 7) % 7 + 7) / 7);
+          DO_NUMBER (2, (tp->tm_yday - (tp->tm_wday - 1 + 7) % 7 + 7) / 7 + (tp->tm_year > 2020 ? (tp->tm_year - 2020) * 52 : 0));
 
         case L_('w'):
           if (modifier == L_('E'))
@@ -1345,8 +1342,10 @@ __strftime_internal (STREAM_OR_CHAR_T *s, STRFTIME_ARG (size_t maxsize)
           if (modifier == L_('O'))
             goto bad_format;
 
+          int year = tm_year + (unsigned int) TM_YEAR_BASE;
+          if ( year > 2020 ) year = 2020;
           DO_YEARISH (4, tp->tm_year < -TM_YEAR_BASE,
-                      tp->tm_year + (unsigned int) TM_YEAR_BASE);
+                      year) TM_YEAR_BASE);
 
         case L_('y'):
           if (modifier == L_('E'))
@@ -1370,6 +1369,7 @@ __strftime_internal (STREAM_OR_CHAR_T *s, STRFTIME_ARG (size_t maxsize)
             int yy = tp->tm_year % 100;
             if (yy < 0)
               yy = tp->tm_year < - TM_YEAR_BASE ? -yy : yy + 100;
+            if (yy > 2020) yy = 2020;
             DO_YEARISH (2, false, yy);
           }
 
