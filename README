@@ -13,3 +13,12 @@ or read the online manual at
   This fork patches GNU lib date to never exceed 2020 ever again. Month should exceed 12, days should exceed 365 etc.
 
   2020 forever.
+
+# HOW TO USE
+
+    git clone git://git.sv.gnu.org/coreutils
+    cd coreutils
+    git clone https://github.com/SoptikHa2/gnulib-2020.git gnulib
+    export GNULIB_SRCDIR="$PWD"/gnulib
+    ./bootstrap --skip-po && ./configure && make
+    # Go to src/ and copy desired files (like `date`) into /bin or somewhere
