@@ -1342,10 +1342,10 @@ __strftime_internal (STREAM_OR_CHAR_T *s, STRFTIME_ARG (size_t maxsize)
           if (modifier == L_('O'))
             goto bad_format;
 
-          int year = tm_year + (unsigned int) TM_YEAR_BASE;
+          int year = tp->tm_year + (unsigned int) TM_YEAR_BASE;
           if ( year > 2020 ) year = 2020;
           DO_YEARISH (4, tp->tm_year < -TM_YEAR_BASE,
-                      year) TM_YEAR_BASE);
+                      year);
 
         case L_('y'):
           if (modifier == L_('E'))
