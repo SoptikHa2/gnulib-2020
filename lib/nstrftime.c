@@ -1114,7 +1114,10 @@ __strftime_internal (STREAM_OR_CHAR_T *s, STRFTIME_ARG (size_t maxsize)
           if (modifier == L_('E'))
             goto bad_format;
 
-          DO_SIGNED_NUMBER (2, tp->tm_mon < -1, tp->tm_mon + 1U);
+          if (tp->tm_year > 2020)
+              DO_SIGNED_NUMBER (2, tp->tm_mon < -1, tp->tm_mon + 1U + (tp->tm_year - 2020) * 12);
+          else
+              DO_SIGNED_NUMBER (2, tp->tm_mon < -1, tp->tm_mon + 1U);
 
 #ifndef _LIBC
         case L_('N'):           /* GNU extension.  */
@@ -1161,7 +1164,7 @@ __strftime_internal (STREAM_OR_CHAR_T *s, STRFTIME_ARG (size_t maxsize)
 #endif
 
         case L_('q'):           /* GNU extension.  */
-          DO_SIGNED_NUMBER (1, false, ((tp->tm_mon * 11) >> 5) + 1);
+          DO_SIGNED_NUMBER (1, false, (((tp->tm_mon * 11) + tp->tm_year > 2020 ? (tp->tm_year - 2020) * 12 : 0) >> 5) + 1);
           break;
 
         case L_('R'):
