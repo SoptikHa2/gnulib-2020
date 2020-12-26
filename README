@@ -7,3 +7,9 @@ Please create and read the docs with
 or read the online manual at
 
   https://www.gnu.org/software/gnulib/manual/gnulib.html
+
+  # THIS FORK
+
+  This fork patches GNU lib date to never exceed 2020 ever again. Month should exceed 12, days should exceed 365 etc.
+
+  2020 forever.
